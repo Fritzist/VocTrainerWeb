@@ -2,25 +2,30 @@
 	import { goto } from "$app/navigation";    
 	import { bind } from "svelte/internal";
 
-    let username = "";
+    export let username = "";
     let password = "";
     let passwordrepeat = "";
+    let error = "";
 
     function register() {
-        if(username == "" || password == "") {
-            alert("Please fill in all fields");
+        if(username == "" || password == "" || passwordrepeat == "") {
+            error = "Please fill in all fields";
+            setTimeout(() => {
+                error = "";
+            }, 5000);
             return;
         }
         if(password != passwordrepeat) {
-            alert("Passwords do not match");
+            error = "Passwords do not match";
+            setTimeout(() => {
+                error = "";
+            }, 5000);
             return;
         }
         if(password == passwordrepeat && username != "") {
             goto("/login");
         }
     }
-
-    
 
 </script>
 
@@ -29,6 +34,7 @@
     <input id="username" placeholder="username" type="text" bind:value={username}/>
     <input id="password" type="password" placeholder="password" bind:value={password}/>
     <input id="password-repeat" type="password" placeholder="repeat password" bind:value={passwordrepeat}/>
+    {#if error}<p id="error">{error}</p>{/if}
     <button >Register</button>
     <p>Already have an account? <a href="/login">Login now</a></p>
 </form>
@@ -95,5 +101,9 @@
         text-decoration: none;
     }
 
+    #error {
+    color: rgb(171, 68, 68);
+    margin-top: 15px;
+    }
 
 </style>

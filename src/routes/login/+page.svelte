@@ -1,15 +1,38 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";   
+    import { username } from "$lib/store";
+    import { password } from "$lib/store";
+
+    let error = "";
+    $username = $username || "";
+    $password = $password || "";
+
+
     function login() {
-        console.log("login");
+        if($username == "" || $password == "") {
+            error = "Please fill in all fields";
+            setTimeout(() => {
+                error = "";
+            }, 5000);
+            return;
+        } else {
+            goto("/profile");
+        }
     }
+    
+
+
+
 </script>
 
 <form on:submit|preventDefault={login}>
     <h3>Login</h3>
-    <input id="username" placeholder="username"/>
-    <input id="password" type="password" placeholder="password"/>
+    <input id="username" placeholder="username" bind:value={$username}/>
+    <input id="password" type="password" placeholder="password" bind:value={$password}/>
+    {#if error}<p id="error">{error}</p>{/if}
     <button>Login</button>
     <p>Dont have an account? <a href="/register">Regsiter here</a></p>
+
 </form>
 
 <style>
@@ -73,6 +96,9 @@
         color: rgb(90, 219, 255);
         text-decoration: none;
     }
-
+    #error {
+        color: rgb(171, 68, 68);
+        margin-top: 15px;
+    }
 
 </style>
